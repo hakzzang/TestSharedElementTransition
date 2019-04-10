@@ -46,7 +46,7 @@ Shared Element는 오직 21위에서만 가능하다고 한다. 21버전 이전�
 
 #### 1-2. Activity A UI
 
-<pre>
+<code>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -68,7 +68,7 @@ Shared Element는 오직 21위에서만 가능하다고 한다. 21버전 이전�
             android:transitionName="icon_android"/>
  
 </android.support.constraint.ConstraintLayout>
-</pre>
+</code>
 
 #### 1-3. Activity B UI
 
