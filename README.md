@@ -46,7 +46,8 @@ Shared Element는 오직 21위에서만 가능하다고 한다. 21버전 이전�
 
 #### 1-2. Activity A UI
 
-<code>
+~~~
+<pre>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -68,10 +69,13 @@ Shared Element는 오직 21위에서만 가능하다고 한다. 21버전 이전�
             android:transitionName="icon_android"/>
  
 </android.support.constraint.ConstraintLayout>
-</code>
+</pre>
+~~~
+
 
 #### 1-3. Activity B UI
 
+~~~
 <pre>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
@@ -95,7 +99,7 @@ Shared Element는 오직 21위에서만 가능하다고 한다. 21버전 이전�
  
 </android.support.constraint.ConstraintLayout>
 </pre>
-
+~~~
 #### 1-4 Activity A
 
 <pre>
@@ -273,6 +277,7 @@ BFragment는 view를 받고, 이미지를 그리는 것인데 여기에는 share
 
 #### 2-4. FFActivity xml
 
+~~~
 <pre>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
@@ -292,9 +297,11 @@ BFragment는 view를 받고, 이미지를 그리는 것인데 여기에는 share
  
 </android.support.constraint.ConstraintLayout>
 </pre>
+~~~
 
 #### 2-5. Fragment A xml
 
+~~~
 <pre>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
@@ -320,9 +327,11 @@ BFragment는 view를 받고, 이미지를 그리는 것인데 여기에는 share
  
 </android.support.constraint.ConstraintLayout>
 </pre>
+~~~
 
 #### 2-6. Fragment B xml
 
+~~~
 <pre>
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
@@ -346,6 +355,7 @@ BFragment는 view를 받고, 이미지를 그리는 것인데 여기에는 share
  
 </android.support.constraint.ConstraintLayout>
 </pre>
+~~~
 
 #### 2-7. 결과물
 ![SET2](https://user-images.githubusercontent.com/22374750/55861976-782c8280-5bb2-11e9-8cc9-1df9cb3d56c7.gif)
