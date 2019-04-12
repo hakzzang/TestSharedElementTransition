@@ -368,7 +368,11 @@ Activity To Activity 와 Fragment To Fragment로 되어있는 예제를 다뤄�
 즉, RecyclerView To Activity로 사용할 때 좋은 효율을 낸다는 것을 의미합니다.
 그래서, 우리는 이번 글에서 RecyclerView의 아이템을 누를 경우 애니메이션이 만들어지는 Android Shared Element Transtion을 구현하겠습니다.
 
+![set3](https://user-images.githubusercontent.com/22374750/56012381-3b35cc80-5d27-11e9-9194-a6813f4cddd8.png)
+
 구조는 Intro Activity에 RecyclerView를 갖고 있습니다. RecyclerView는 RecyclerView Item이라는 xml 구조로 되어 있으며, 누를 경우 Gallery Activity로 이동하게 됩니다. 최종 결과물은 아래와 같습니다. 
+
+![SET4](https://user-images.githubusercontent.com/22374750/56012378-37a24580-5d27-11e9-85c5-bbb66a0be434.gif)
 
 #### 3. 시나리오 구조
 
