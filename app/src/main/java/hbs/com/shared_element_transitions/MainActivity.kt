@@ -3,6 +3,7 @@ package hbs.com.shared_element_transitions
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import hbs.com.shared_element_transitions.recycler_to_activity.RAActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         }
         ll_item_2.setOnClickListener {
             startActivity(Intent(this@MainActivity, AFActivity::class.java))
+        }
+        ll_item3.setOnClickListener {
+            startActivity(Intent(this@MainActivity, RAActivity::class.java))
         }
     }
 }
