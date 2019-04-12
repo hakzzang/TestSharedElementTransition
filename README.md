@@ -362,5 +362,173 @@ BFragment는 view를 받고, 이미지를 그리는 것인데 여기에는 share
 
 
 
+### 3. RecyclerView to Activity
+
+Activity To Activity 와 Fragment To Fragment로 되어있는 예제를 다뤄봤습니다. 우리가 흔하게 Android Shared Element Transition의 Best Example은 PlayStore라고 할 수 있겠습니다.
+즉, RecyclerView To Activity로 사용할 때 좋은 효율을 낸다는 것을 의미합니다.
+그래서, 우리는 이번 글에서 RecyclerView의 아이템을 누를 경우 애니메이션이 만들어지는 Android Shared Element Transtion을 구현하겠습니다.
+
+구조는 Intro Activity에 RecyclerView를 갖고 있습니다. RecyclerView는 RecyclerView Item이라는 xml 구조로 되어 있으며, 누를 경우 Gallery Activity로 이동하게 됩니다. 최종 결과물은 아래와 같습니다. 
+
+#### 3. 시나리오 구조
+
+- Intro Activity에서 리사이클러뷰를 호출한다.
+- 호출한 리사이클러뷰의 아이템을 클릭한다.
+- 클릭을 할 경우, View와 모델을 Activity에 넘기고, Activity에서는 onGalleryItemClick() 매소드를 호출한다.
+- onGalleryItemClick에서는 받은 model을 intent에 담고, ActivityOptionsCompat을 만든다.
+- 만든 intent와 option을 Activity로 이동시킨다.
+- 이동한 Activity에서 받은 intent의 값을 통해서 transition animation이 호출 된다.
+
+#### 3-0. 각종 xml을 만든다.
+
+https://github.com/hakzzang/TestSharedElementTransition/blob/developer/app/src/main/res/layout/activity_rv.xml
+
+
+
+#### 3-1. Intro Activity에서 리사이클러뷰를 호출한다.
+
+~~~
+<pre>
+class RAActivity : AppCompatActivity(), GalleryClickListener {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_rv)
+ 
+        title = "RecyclerView to Activity"
+ 
+        val verticalLinearLayoutManager = LinearLayoutManager(this)
+        verticalLinearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+ 
+        val dummyArrayList: MutableList<GalleryMetaData> = mutableListOf<GalleryMetaData>(
+            GalleryMetaData(
+                R.mipmap.ic_launcher,
+                "0번 데이터"
+            ),
+            GalleryMetaData(
+                R.mipmap.ic_launcher_round,
+                "1번 데이터"
+            ),
+            GalleryMetaData(
+                R.mipmap.ic_launcher,
+                "2번 데이터"
+            ),
+            GalleryMetaData(
+                R.mipmap.ic_launcher_round,
+                "3번 데이터"
+            ),
+            GalleryMetaData(
+                R.mipmap.ic_launcher,
+                "4번 데이터"
+            )
+        )
+ 
+        val rvTransitionAdapter =
+            RVTransitionAdapter(dummyArrayList, this)
+        rv_transtion.apply {
+            layoutManager = verticalLinearLayoutManager
+            adapter = rvTransitionAdapter
+        }
+ 
+    }
+ 
+    @Parcelize
+    data class GalleryMetaData(val drawable: Int, val content: String) : Parcelable
+}
+</pre>
+~~~
+
+#### 3-2. 호출한 리사이클러뷰의 아이템을 클릭한다 && 
+
+클릭을 할 경우, View와 모델을 Activity에 넘기고, Activity에서는 onGalleryItemClick() 매소드를 호출한다.
+~~~
+<pre>
+class RVTransitionAdapter(
+    val arrayList: MutableList<RAActivity.GalleryMetaData>,
+    val galleryClickListener: GalleryClickListener
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return RVTransitionViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.item_gallery,
+                parent,
+                false
+            )
+        )
+    }
+ 
+    override fun getItemCount(): Int {
+        return arrayList.size
+    }
+ 
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+        val rvTransitionViewHolder = viewHolder as RVTransitionViewHolder
+        rvTransitionViewHolder.view.iv_title_image_galley.setImageResource(arrayList[position].drawable)
+        rvTransitionViewHolder.view.tv_content_gallery.text = arrayList[position].content
+        ViewCompat.setTransitionName(
+            rvTransitionViewHolder.view.cl_item_gallery,
+            arrayList[position].content
+        )
+ 
+        rvTransitionViewHolder.view.cl_item_gallery.setOnClickListener {
+            galleryClickListener.onGalleyItemClick(it, arrayList[position])
+        }
+    }
+ 
+    class RVTransitionViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+}
+</pre>
+~~~
+
+#### 1-3. onGalleryItemClick에서는 받은 model을 intent에 담고, ActivityOptionsCompat을 만든다.
+
+~~~
+<pre>
+interface GalleryClickListener {
+    fun onGalleyItemClick(view: View, galleryMetaData: RAActivity.GalleryMetaData) {}
+}
+ 
+class RAActivity : AppCompatActivity(), GalleryClickListener {
+    //...
+ 
+    override fun onGalleyItemClick(view: View, galleryMetaData: GalleryMetaData) {
+        val intent = Intent(this, GalleyActivity::class.java)
+        intent.putExtra("gallery", galleryMetaData)
+ 
+        val options = ActivityOptionsCompat
+            .makeSceneTransitionAnimation(
+                this@RAActivity, view,
+                ViewCompat.getTransitionName(view)!!
+            )
+ 
+        startActivity(intent, options.toBundle())
+    }
+}
+</pre>
+~~~
+
+#### 1-4. 만든 intent와 option을 Activity로 이동시킨다. && 
+
+이동한 Activity에서 받은 intent의 값을 통해서 transition animation이 호출 된다.
+
+~~~
+<pre>
+class GalleyActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_gallery)
+        supportPostponeEnterTransition()
+        val mBundle = intent.extras
+        val galleyMetaData = mBundle.getParcelable<RAActivity.GalleryMetaData>("gallery")
+        iv_title_image_galley.transitionName = galleyMetaData.content
+        tv_title_image_galley.transitionName = galleyMetaData.content
+        iv_title_image_galley.setImageResource(galleyMetaData.drawable)
+        tv_title_image_galley.text = galleyMetaData.content
+        supportStartPostponedEnterTransition()
+    }
+}
+</pre>
+
+위와 같은 작업을 하게 되면, 플레이스토어와 유사한 리사이클러뷰의 구조가 만들어진다. 하지만, 여기에서 생긴 이슈는 깔끔하게 애니메이션이 떨어지는 것이 아닌데, 이것은 추후에 더 다루도록 하겠습니다.
 
 ﻿
